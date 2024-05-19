@@ -1,22 +1,23 @@
-# מחשבון להמרת בסיסים
-תוכנית Java פשוטה המאפשרת למשתמשים לבצע המרות בין מספרים עשרוניים למספרים בינאריים ולהיפך. התוכנית ידידותית לשימוש ומספקת דרך מהירה לביצוע המרות אלו.
+# Base Conversion Calculator
+This is a Java program that allows users to convert numbers between decimal and binary. The program is user-friendly and provides a quick way to perform these conversions. 
 
-# איך להשתמש
-1. הרץ את התוכנית ועיין בתפריט.
-2. בחר באפשרות המתאימה לך:
-   - להמרה ממספר עשרוני לבינארי הזן 1
-   - להמרה ממספר בינארי לעשרוני הזן 2
-   - ליציאה הזן 0
+# How to Use
+1. Run the program and review the menu.
+2. Choose the appropriate option:
+- Enter 1 to convert from decimal to binary. 
+- Enter 2 to convert from binary to decimal.
+- Enter 0 to exit.
 
-# אפשרויות המרה
-- המרה מעשרוני לבינארי:
-1. הזן מספר עשרוני אותו תרצה להמיר.
-2. התוכנית תציג את המספר השקול לו בבינארי.
+# Conversion Options
 
-- המרה מבינארי לעשרוני:
-1. הזן מספר בינארי אותו תרצה להמיר.
-2. התוכנית תציג את המספר השקול לו בעשרוני.
+- Decimal to Binary Conversion:
+1. Enter the decimal number you wish to convert.
+2. The program will display the equivalent binary number.
 
-# הערות
-- התוכנית מאמתת את קלטי המשתמש על מנת לוודא שהם תואמים לאפשרויות התפריט.
-- פונקציות ההמרה עוסקות בקלטים תקינים ומתריעות למשתמש כאשר הקלט שהוכנס אינו תקין.
+- Binary to Decimal Conversion:
+1. Enter the binary number you wish to convert.
+2. The program will display the equivalent decimal number.
+
+# Notes
+- The program validates user inputs to ensure they match the menu options.
+- The conversion functions handle valid inputs and notify the user when the input is invalid.

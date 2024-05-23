@@ -9,17 +9,16 @@ public class Exc1 {
 
 		while (continueToCalc) {
 			String choice = getMode();
-		// as long as the user wants to continue calculate numbers
+			// as long as the user wants to continue calculate numbers
 			if (choice.equals("A")) { // binary to decimal
 				binaryToDecimal();
-
 
 			} else { // decimal to binary
 				double originalNumber = getDecimalInput();
 				sc.nextLine();
 				String binaryAns = decimalToBinary(originalNumber);
-				printAnswer(originalNumber, binaryAns, choice);
-
+				String originalNumberStr = originalNumber + "";
+				printAnswer(originalNumberStr, binaryAns, choice);
 			}
 			continueToCalc = anotherGame();
 
@@ -99,9 +98,14 @@ public class Exc1 {
 		return ans;
 	}
 
-	public static void printAnswer(double originalNumber, String convertedNumber, String choice) {
+	public static void printAnswer(String originalNumber, String convertedNumber, String choice) {
 		// prints the calculated answer
-		System.out.println("The decimal number " + originalNumber + " equals to the binary number " + convertedNumber + "\n");
+		if (choice.equals("A")) {
+			System.out.println("The binary number " + originalNumber + " equals to the decimal number " + convertedNumber + "\n");
+		}
+		else {
+			System.out.println("The decimal number " + originalNumber + " equals to the binary number " + convertedNumber + "\n");
+		}
 	}
 
 	public static boolean anotherGame() {
@@ -150,20 +154,21 @@ public class Exc1 {
 		return -1; // if there isn't a dot in the user's input
 	}
 
-	public static double binaryToDecimal() {
+	public static void binaryToDecimal() {
 		//converts binary number into a decimal number
 		String num = getBinaryInput();
 		int length = num.length();
 		int dot = findDot(num);
 		double ans = 0;
+		String ansStr = "";
 		if (dot == -1) { //if there isn't a dot in the input
 			for (int i = length - 1; i >= 0; i--) {
 				int numeric = Character.getNumericValue(num.charAt(i));
 				double value = Math.pow(2, length - i - 1);
 				ans += numeric * value; // calculates the value
 			}
-			System.out.println("The binary number " + num + " equals to the decimal number " + ans + "\n");
-			return ans;
+			ansStr = (int)ans + ""; //  converting to int to remove the ".0", and string for the printing
+
 		} else {
 			for (int i = dot - 1; i >= 0; i--) {
 				//calculates before the dot
@@ -177,10 +182,16 @@ public class Exc1 {
 				double value = Math.pow(2, dot - j);
 				ans += numeric * value;
 			}
+
+			double doubleNum = Double.parseDouble(num);
+			if (doubleNum == (int) doubleNum) { // end case: the user enter an integer with a decimal point (e.g 100.0)
+				ansStr = (int)ans + ""; }//  converting to int to remove the ".0", and string for the printing
+			else {
+				ansStr = ans + ""; }// only converting  to string
 		}
-		System.out.println("The binary number " + num + " equals to the decimal number " + ans + "\n"); // prints the answer
-		return ans;
+		printAnswer(num, ansStr, "A");
 	}
+
 	public static String getBinaryInput () {
 		// gets the user's  input
 		System.out.println("Please enter a binary number to convert:");
@@ -194,8 +205,6 @@ public class Exc1 {
 				System.out.println("Incorrect input please try again");
 			}
 		}
-		return "bla"; //will never return this because flag will be true as long as the input is incorrect
+		return ""; //will never return this because flag will be true as long as the input is incorrect
 	}
 }
-
-

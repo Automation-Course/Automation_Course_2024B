@@ -1,0 +1,12 @@
+## Automation Assignment 1 - Calculator
+- In order to start the program run the code
+- In order to convert a binary number to decimal number press A 
+- In order to convert a decimal number to a binary number press B
+- After selecting the conversion direction, you will be prompted to enter the number you wish to convert.
+- If converting from binary to decimal, enter a binary number 
+- If converting from decimal to binary, enter a decimal number  
+- After the conversion is complete, you will be asked if you want to calculate another number.
+- Press Y if you want to continue and convert another number.
+- Press any other input to end the program
+- Ensure that the input numbers are valid according to the chosen conversion direction.
+- The program will handle integer numbers or double numbers 

@@ -1,27 +1,29 @@
 
-הוראות למפעיל ReadMe
-הפעלת הבקר ואתחולו
-יש להפעיל את הבקר
-Connection destination -> Connection1 -> Serial USB -> USB -> OK -> OK
-Compile -> Rebuild All
-Online -> Remote Operation(s)
-STOP  -> yes -> ok
-Online -> Write to PLC
-Press on Parameters + Program
-Press -> Execute
-Online -> Remote Operation(s)
-RUN -> yes -> ok
+Instructions for the operator ReadMe
+Activating and initializing the controller
+1. The controller must be turned on
+2. Connection destination -> Connection1 -> Serial USB -> USB -> OK -> OK
+3. Compile -> Rebuild All
+4. Online -> Remote Operation(s)
+5. STOP -> yes -> ok
+6. Online -> Write to PLC
+7. Press on Parameters + Program
+8. Press -> Execute
+9. Online -> Remote Operation(s)
+10. RUN -> yes -> ok
 
-תהליך ייצור הגומיגם
-הזן ערכי מלאי חומר גלם ל-Watch1.
-משתני הקלט: petel_begin, limon_begin, meyatzev_begin, gummybear_begin
-לחץ על כפתור 7X על מנת להתחיל את יום העבודה של המפעל. לאחר הלחיצה, נורה 7Y תידלק ותישאר דלוקה לאורך כל יום העבודה כאינדיקציה לכך שיום העבודה מתרחש, זאת כל עוד יש מספיק חומר גלם ולא נלחץ כפתור החירום 5X. במידה ויש חוסר בחומר גלם או נלחץ כפתור החירום, הנורה 7Y תיכבה וכלל המשתנים יתאפסו.
-בחר את הערך באמצעות הקלט האנלוגי (Analog Input-1) הנע בין 0 ל-10. על מנת לבחור מארז גומיגם רגיל, יש להזין קלט בין 0 ל-5. על מנת לבחור מארז גומיגם פינוק, יש להזין קלט בין 6 ל-10.
-הרם את מתג 1X על מנת לבצע את פעולת הכנת טעמי הגלידה. לאחר לחיצה על מתג זה, נורה 0Y תדלוק למשך 5 שניות.
-הרם את מתג 2X על מנת לבצע את פעולת קירור הגלידה. לאחר לחיצה על מתג זה, נורה 2Y תדלוק למשך זמן של 8 שניות או עד שחיישן הטמפרטורה 3X יצביע על טמפרטורה של 10 מעלות ומטה (המתג 3X יהיה מורם).
-מיד לאחר סיום קירור הגלידה (נורה Y2 כבויה), תתבצע פעולת ערבוב החומרים בהתאם לזמנים המתאימים עבור כל סוג גלידה (3 שניות לגלידה רגילה, 5 שניות לגלידה פינוק). בשלב זה תוכל להבחין בנורות 5Y ו-6Y אשר כל חצי שנייה יהבהבו לסירוגין. 
-הרם את מתג 4X על מנת להתחיל את תהליך האריזה של מארז הכולל 7 גומיגם.
-על מנת לארוז גביע בודד עליך להרים את מתג 0X. על מנת לארוז מארז גומיגם שלם יש להרים את המתג 7 פעמים ברצף. בעת העלאה של המתג 0X נורה 4Y נדלקת ונשארת דולקת לאורך כל תהליך האריזה מסיום אריזת הגביע הראשון ועד לסיום המארז כולו. 
-על מנת להתחיל בייצור מארז גומיגם נוסף, עליך תחילה להוריד את כלל המתגים בבקר (0X,1X,2X,4X). במידה ו-3X ו/או 5X מורמים עליך להוריד גם אותם. לאחר מכן, תסתיים איטרציה אחת, כלל המונים יתאפסו (1CC, 2CC) ועליך יהיה לבצע את כלל השלבים מהתחלה. 
-בסיום יום העבודה תוכל להבחין בפלט האנלוגי (Analog Output) המציג את מספר מארזי הגומיגם שיוצרו בצורה עשרונית. לדוגמא: מארז אחד יופיע באופן הבא - 0.1.
-בכל שלב תוכל ללחוץ על כפתור החירום 5X במידה ותרצה להפסיק את יום העבודה.
+The Gummigam production process
+Enter raw material inventory values ??into Watch1.
+The input variables: petel_begin, limon_begin, meyatzev_begin, gummybear_begin
+Press the X7 button to start the factory working day. Once pressed, light Y7 will light up and remain lit throughout the workday as an indication that the workday is taking place, as long as there is enough raw material and the emergency button X5 is not pressed. If there is a lack of raw material or the emergency button is pressed, the Y7 light will turn off and all variables will be reset.
+Select the value using the analog input (Analog Input-1) ranging from 0 to 10. In order to select a standard Gummigam case, an input between 0 and 5 must be entered. In order to choose a Gummigam-pinuk case, enter an input between 6 and 10.
+Lift the X1 switch to perform the ice cream flavor preparation operation. After pressing this switch, the Y0 light will illuminate for 5 seconds.
+Lift the X2 switch to perform the ice cream cooling operation. After pressing this switch, lamp Y2 will light up for 8 seconds or until temperature sensor X3 indicates a temperature of 10 degrees or less (switch X3 will be raised).
+Immediately after the end of cooling the ice cream (light Y2 off), the mixing of the ingredients will take place according to the appropriate times for each type of ice cream (3 seconds for regular ice cream, 5 seconds for treat ice cream). At this point you will notice the Y5 and Y6 lights which every half a second will flash alternately.
+Lift the X4 switch to start the packing process of a case that includes 7 Gummigam.
+In order to pack a single cone you must pick up the X0 switch. In order to pack a complete package, the switch must be lifted 7 times in a row. When the X0 switch is raised, the Y4 light turns on and remains lit throughout the entire packaging process from the end of the first cup packaging to the end of the entire case.
+In order to start manufacturing another Gumigam, you must first set off all the switches in the controller (X0, X1, X2, X4). If X3 and/or X5 are raised you must also lower them. After that, one iteration will end, all the counters will be reset (1CC, 2CC) and you will have to do all the steps from the beginning.
+At the end of the working day, you will be able to notice the analog output showing the number of gummygum cases that were produced in decimal form. For example: one package will appear as follows - 0.1.
+At any stage you can press the emergency button X5 if you want to stop the working day.
+
+

@@ -1,0 +1,280 @@
+
+Simulation Code:
+#include <Adafruit_LiquidCrystal.h>
+#include <Servo.h>
+
+// controlling LED with LDR
+#define potenPin A2
+int potenVal = 0;
+#define ledPin 12
+#define LDRpin A1
+int LDRval = 0;
+
+// controlling servo with ultrasonic sensor
+#define servoPin 9
+Servo myservo;
+int angle = 0;
+bool Direction = true;
+
+// define distance pins
+const int trigPin = 3;
+const int echoPin = 2;
+long duration;
+float distance;
+
+Adafruit_LiquidCrystal lcd_1(0);
+
+void setup() {
+  myservo.attach(servoPin);
+  Serial.begin(9600);
+  pinMode(potenPin, INPUT);
+  pinMode(LDRpin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(servoPin, OUTPUT);
+ 
+ 
+
+
+  // Start the LCD
+  lcd_1.begin(16, 2);
+  lcd_1.setBacklight(LOW);
+  lcd_1.print("Distance: ");
+}
+
+void loop() {
+  turnNightLamp();
+  sendUltrasonicPulse();
+  displayDistance();
+  handleDistance();
+  delay(500); // Added a longer delay for stability
+}
+
+void turnNightLamp() {
+  potenVal = analogRead(potenPin);
+  LDRval = analogRead(LDRpin);
+  Serial.print("LDR reading = ");
+  Serial.println(LDRval);
+  Serial.print("poten reading = ");
+  Serial.println(potenVal);
+ 
+  if (LDRval < potenVal) { // DARK
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}
+
+void turning_servo() {
+  if(distance<30){
+  if (Direction){
+    angle += 1;
+    if(angle >= 180){
+      angle = 180;
+      Direction = false;
+    }
+    speed = 180;
+  }
+    else{
+      angle -= 10;
+      if(angle <= 0){
+      angle = 0;
+      Direction = true;
+    }
+      speed = 0;
+    }
+  myservo.write(speed);
+  Serial.print("Turning servo to angle: ");
+  Serial.println(angle);
+} else {
+  myservo.write(90);
+}
+}
+
+void sendUltrasonicPulse() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+ 
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.035 / 2;
+ 
+  Serial.print("Pulse duration: ");
+  Serial.println(duration);
+}
+
+void displayDistance() {
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+ 
+  lcd_1.setCursor(0, 1);
+  lcd_1.print("                "); // Clear the previous distance value
+  lcd_1.setCursor(0, 1);
+  lcd_1.print(distance);
+  lcd_1.print(" cm");
+}
+
+void handleDistance() {
+  if (distance < 30 && !servoAdjusted) { // Check if distance is less than 30 cm and servo is not adjusted
+    turning_servo();  
+    lcd.setBacklight(HIGH);
+    servoAdjusted = true; // Set flag to true indicating servo adjustment is done
+  } else if (distance >= 30) { // If distance is 30 cm or more
+    servoAdjusted = false; // Reset servo adjustment flag
+    turning_servo();  
+    lcd.setBacklight(HIGH);
+    lcd.setCursor(0, 1);
+    lcd.print(distance);
+  }
+}
+
+
+IDE Code
+
+#include <LiquidCrystal_I2C.h>
+#include <Wire.h>
+#include <Servo.h>
+
+// controlling LED with LDR
+#define potenPin A2
+int potenVal = 0;
+#define ledPin 12
+#define LDRpin A1
+int LDRval = 0;
+
+// controlling servo with ultrasonic sensor
+#define servoPin 9
+Servo myservo;
+int angle = 90;
+int speed = 0;
+bool Direction = true;
+bool servoAdjusted = false; // Initialize a flag to track servo adjustment
+
+
+// define distance pins
+const int trigPin = 3;
+const int echoPin = 2;
+long duration;
+float distance;
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+void setup() {
+  pinMode(potenPin, INPUT);
+  pinMode(LDRpin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  
+  myservo.attach(servoPin);
+  pinMode(potenPin, INPUT);
+  pinMode(LDRpin, INPUT);
+  pinMode(ledPin, OUTPUT);
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(servoPin, OUTPUT); 
+
+  // Start the LCD
+  lcd.init();
+  lcd.backlight();
+  lcd.print("Distance :");
+  lcd.print(distance);
+
+  Serial.begin(9600);
+}
+
+void loop() {
+  turnNightLamp();
+  sendUltrasonicPulse();
+  displayDistance();
+  handleDistance();
+  delay(500); // Added a longer delay for stability
+}
+
+void turnNightLamp() {
+  potenVal = analogRead(potenPin);
+  LDRval = analogRead(LDRpin);
+  Serial.print("LDR reading = ");
+  Serial.println(LDRval);
+  Serial.print("poten reading = ");
+  Serial.println(potenVal);
+  
+  if (LDRval < potenVal) { // DARK
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+}
+
+void turning_servo() {
+  if(distance<30){
+  if (Direction){
+    angle += 1;
+    if(angle >= 180){
+      angle = 180;
+      Direction = false;
+    }
+    speed = 180;
+  }
+    else{
+      angle -= 10;
+      if(angle <= 0){
+      angle = 0;
+      Direction = true;
+    }
+      speed = 0;
+    }
+  myservo.write(speed);
+  Serial.print("Turning servo to angle: ");
+  Serial.println(angle);
+} else {
+  myservo.write(90);
+}
+}
+
+void sendUltrasonicPulse() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  duration = pulseIn(echoPin, HIGH);
+  distance = duration * 0.035 / 2;
+  
+  Serial.print("Pulse duration: ");
+  Serial.println(duration);
+}
+
+void displayDistance() {
+  Serial.print("Distance: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+  
+  lcd.setCursor(0, 1);
+  lcd.print(distance);
+  lcd.print(" cm");
+}
+
+
+void handleDistance() {
+  if (distance < 30 && !servoAdjusted) { // Check if distance is less than 30 cm and servo is not adjusted
+    turning_servo();  
+    lcd.setBacklight(HIGH);
+    servoAdjusted = true; // Set flag to true indicating servo adjustment is done
+  } else if (distance >= 30) { // If distance is 30 cm or more
+    servoAdjusted = false; // Reset servo adjustment flag
+    turning_servo();  
+    lcd.setBacklight(HIGH);
+    lcd.setCursor(0, 1);
+    lcd.print(distance);
+  }
+}
+
+
+
+

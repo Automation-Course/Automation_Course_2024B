@@ -1,0 +1,140 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <Servo.h>
+#define servoPin 3
+// libraties for tempature 
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+const int oneWireBus = A0; // Analog pin connected to Vout of the temperature sensor
+
+// Setup a oneWire instance to communicate with any OneWire devices
+OneWire oneWire(oneWireBus);
+
+// Pass our oneWire reference to Dallas Temperature sensor 
+DallasTemperature sensors(&oneWire);
+
+
+// Initialize the LCD with the I2C address 0x27 and a 16x2 display size
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// Define pins for the temperature sensor
+const int tempSensorPin = A0; // Analog pin connected to Vout of the temperature sensor
+
+// Define pins for the ultrasonic sensor
+const int trigPin = 10; // Trigger pin
+const int echoPin = 11; // Echo pin
+
+// Define pins for the LED
+const int ledPin = 7;
+
+Servo servo;
+
+// Temperature threshold for air conditioner activation (in Celsius)
+//const float thresholdTemp = 24.0;
+ float temp =0;
+// Distance threshold for door opening (in cm)
+const int thresholdDistance = 50; // 50 cm (0.5 meters)
+
+// Variables to store previous states
+bool previousACState = false;
+bool previousDoorState = false;
+unsigned long doorClosedTime=0;
+
+void setup() {
+  // Start the serial communication
+  Serial.begin(9600);
+  sensors.begin(); 
+  // Initialize the LCD
+  lcd.init(); // Initialize the LCD
+  lcd.backlight(); // Turn on the backlight
+
+  // Initialize the servo
+  servo.attach(servoPin);
+
+  // Set pin modes
+  pinMode(tempSensorPin, INPUT);
+  pinMode(trigPin, OUTPUT); // Set trigPin as an output
+  pinMode(echoPin, INPUT); // Set echoPin as an input
+  pinMode(ledPin, OUTPUT);
+
+  // Initial welcome message
+  lcd.print("Welcome!!!");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop() {
+  // Request temperature reading
+  sensors.requestTemperatures();
+
+  // Read the temperature from the sensor
+  temp = sensors.getTempCByIndex(0);
+
+  // Update AC state and control LED based on temperature threshold
+  lcd.setCursor(0, 1);
+  if (temp > 24) {
+    digitalWrite(ledPin, HIGH); // Turn on the LED (simulating air conditioner on)
+    lcd.print("AC ON        ");
+  } else {
+    digitalWrite(ledPin, LOW); // Turn off the LED (simulating air conditioner off)
+    lcd.print("AC OFF       ");
+  }
+
+  // Print temperature to Serial monitor for debugging
+  Serial.print("Temp: ");
+  Serial.println(temp);
+
+  // Display temperature on LCD
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(temp);
+  lcd.print(" C  ");
+
+  // Ultrasonic sensor operation
+  // Send a 10 microsecond pulse to trigger the ultrasonic sensor
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Read the echo time
+  long duration = pulseIn(echoPin, HIGH);
+
+  // Calculate the distance
+  int distance = duration * 0.034 / 2; // Speed of sound wave divided by 2 (go and back)
+
+  // Print the distance on the serial monitor
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  // Check if the distance is less than the threshold distance
+  bool doorState = distance < thresholdDistance;
+  if (doorState != previousDoorState) {
+    lcd.setCursor(9, 1); // Move cursor to the second half of the second row
+    if (doorState) {
+      lcd.print("Door Open ");
+      if (!servo.attached()) {
+        servo.attach(servoPin); // Reattach the servo if it's not attached
+      }
+      servo.write(40); // Move the servo to 90 degrees (open door)
+    } else {
+      lcd.print("Door Closed  ");
+      servo.write(100); // Move the servo to 100 degrees (close door)
+      delay(5000); // Wait for 5 seconds
+      servo.detach(); // Stop the servo
+      doorClosedTime = millis(); // Record the time the door was closed
+    }
+    previousDoorState = doorState;
+  }
+
+  // Reattach the servo if the door should be open and enough time has passed since it was closed
+  if (!doorState && millis() - doorClosedTime > 5000 && !servo.attached()) {
+    servo.attach(servoPin);
+    servo.write(90); // Ensure the servo is in the open position
+  }
+
+  // Delay for a while
+  delay(1000);
+}
